@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.text.NumberFormat;
+import java.math.BigDecimal;
 
 
 @Profile("Pro")
@@ -16,14 +16,13 @@ public class ProShop extends PlusShop{
 
     @Override
     public void writeFullPrice() {
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        nf.setMaximumFractionDigits(2);
-
-        System.out.println(nf.format(addDiscount(getFullPriceWithVAT())));
+        BigDecimal fullPrice = addDiscount(getFullPriceWithVAT()).setScale(2, BigDecimal.ROUND_HALF_UP);
+        System.out.println(fullPrice);
     }
 
-    private Double addDiscount(Double price) {
-        return price * (1 - (double) discount/100);
+    private BigDecimal addDiscount(BigDecimal price) {
+        BigDecimal discount = BigDecimal.valueOf(1 -  ((double) this.discount/100));
+        return price.multiply(discount);
     }
 
 }

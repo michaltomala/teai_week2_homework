@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.text.NumberFormat;
-
+import java.math.BigDecimal;
 
 @Profile("Plus")
 @Service
@@ -16,18 +15,17 @@ public class PlusShop extends Shop{
 
     @Override
     public void writeFullPrice() {
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        nf.setMaximumFractionDigits(2);
-
-        System.out.println(nf.format(getFullPriceWithVAT()));
+        BigDecimal fullPrice = getFullPriceWithVAT().setScale(2, BigDecimal.ROUND_HALF_UP);
+        System.out.println(fullPrice);
     }
 
-    protected Double getFullPriceWithVAT() {
+    protected BigDecimal getFullPriceWithVAT() {
         return addVAT(getFullPrice());
     }
 
-    protected Double addVAT(Integer price) {
-        return ((double) VAT / 100 + 1) * price;
+    protected BigDecimal addVAT(BigDecimal price) {
+        BigDecimal vat = BigDecimal.valueOf(((double) VAT / 100) + 1);
+        return price.multiply(vat);
     }
 
 }

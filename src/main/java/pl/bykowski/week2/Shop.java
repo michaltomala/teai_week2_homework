@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,8 +37,8 @@ public class Shop {
         addProducts(product1, product2, product3, product4, product5);
     }
 
-    protected Integer generateRandomPrice() {
-        return random.nextInt(251) + 50;
+    protected BigDecimal generateRandomPrice() {
+        return BigDecimal.valueOf(random.nextInt(251) + 50);
     }
 
     protected void addProducts(Product... product) {
@@ -58,11 +59,10 @@ public class Shop {
         System.out.println(getFullPrice());
     }
 
-    protected Integer getFullPrice() {
-        return products
-            .stream()
-            .mapToInt(Product::getPrice)
-            .sum();
+    protected BigDecimal getFullPrice() {
+        return products.stream()
+            .map(Product::getPrice)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }
