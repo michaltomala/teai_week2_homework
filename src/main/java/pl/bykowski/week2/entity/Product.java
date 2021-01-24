@@ -1,4 +1,4 @@
-package pl.bykowski.week2;
+package pl.bykowski.week2.entity;
 
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
